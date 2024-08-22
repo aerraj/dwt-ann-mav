@@ -5,6 +5,7 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Vn2gfWp7UJfAPzhU6yKYQBWXVD8OMJac)
 ### Architecture of the Algorithm used in MAV
 ![image](https://github.com/user-attachments/assets/878db98f-73b3-487a-a591-34f249dc85b2)
+![image](https://github.com/user-attachments/assets/fbeb039a-48da-45fa-bc8c-12fbf92d1d98)
 
 ### Features of MAV
 
