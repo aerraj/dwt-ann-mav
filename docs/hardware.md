@@ -29,7 +29,7 @@ The reference captures a full window, computes DWT, then runs ANN. It cannot sim
 
 Stored samples, features, normalization, weights, biases and activations are signed 32-bit values with 16 fractional bits. Filter coefficients have 30 fractional bits. MACs accumulate in 96 bits, arithmetic-shift, then saturate to signed 32 bits. Mean-absolute features divide positive sums by valid coefficient counts. Python `fixed.py` mirrors these rules with arbitrary-precision intermediates; tests compare actual RTL bit for bit.
 
-Export rejects unrepresentable parameters; runtime activations saturate. Tiny db44 taps quantize to zero, counted in the export manifest. Run `verify-fixed` on real held-out data: float accuracy does not validate fixed-point classification. ADC gain and offset are separately quantized and need calibration-error checks. Physical sensor validity is the board wrapper's responsibility.
+Export rejects unrepresentable parameters, including ADC gains or inverse normalization scales that round to zero; runtime activations saturate. The Python ADC converter supports up to 24-bit codes, but not every such calibration is representable by the Q16 hardware frontend. Tiny db44 taps quantize to zero, counted in the export manifest. Run `verify-fixed` on real held-out data: float accuracy does not validate fixed-point classification. ADC gain and offset are separately quantized and need calibration-error checks. Physical sensor validity is the board wrapper's responsibility.
 
 Classification uses a signed logit threshold. The sigmoid LUT is for telemetry only, using a left-bin lookup and clipping logits to [-8,8]. Quantized decisions can differ near threshold.
 

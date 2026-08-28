@@ -5,7 +5,7 @@ import pytest
 
 from dwt_ann_mav.data import Recording, create_demo, load_signal, read_manifest, split_recordings
 from dwt_ann_mav.fixed import export_fpga, fixed_ann, quantize
-from dwt_ann_mav.model import load_model, predict
+from dwt_ann_mav.model import load_model, predict, save_model
 from dwt_ann_mav.sensors import ACS712, ProtectionController
 from dwt_ann_mav.train import train
 
@@ -70,6 +70,19 @@ def test_acs712():
     for invalid in ([4096], [-1], [3.5], [np.nan]):
         with pytest.raises(ValueError):
             sensor.convert(invalid)
+
+
+@pytest.mark.parametrize("underflow", ["adc", "normalizer"])
+def test_export_rejects_scale_underflow_before_writing_roms(artifact, tmp_path, underflow):
+    calibration = ACS712(adc_bits=24) if underflow == "adc" else ACS712()
+    if underflow == "normalizer":
+        model, mean, _, config, metadata = load_model(artifact)
+        save_model(artifact, model, mean, np.full(9, 1e8), config, metadata)
+    destination = tmp_path / "rom-underflow"
+    with pytest.raises(ValueError, match="rounds to zero"):
+        export_fpga(artifact, destination, calibration=calibration)
+    assert not list(destination.glob("*.mem"))
+    assert not (destination / "model_config.svh").exists()
 
 
 def test_protection_latched_and_independent():

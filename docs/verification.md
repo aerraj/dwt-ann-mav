@@ -4,7 +4,7 @@ Local validation on 2026-08-28, Python 3.12, CPU inference. This is implementati
 
 ## Checks run
 
-`python -m pytest -q`: **22 passed** (no RTL skips).
+`python -m pytest -q`: **24 passed** (no RTL skips).
 
 - Numerical/db44 checks: generator agrees with PyWavelets db2/db4/db20/db38; db44 passes orthogonality and nine-level reconstruction checks.
 - Executable RTL: repeated db4 and full db44 windows match Python integer features exactly; six-layer ANN matches exported fixed-point weights, including extreme signed inputs; ADC-to-DWT-to-ANN and sigmoid telemetry match the reference.

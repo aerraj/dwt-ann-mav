@@ -108,6 +108,14 @@ def export_fpga(model_path, directory, threshold=0.5, calibration=None):
     }
     threshold_q = int(quantize(math.log(threshold / (1 - threshold))))
     gain, offset = int(quantize(calibration.gain)), int(quantize(calibration.offset))
+    if gain == 0:
+        raise ValueError(
+            "ADC gain rounds to zero in Q16; use a supported calibration or a higher-precision ADC frontend"
+        )
+    if np.any(arrays["inverse_scale.mem"] == 0):
+        raise ValueError(
+            "Inverse normalization scale rounds to zero in Q16; rescale inputs or use higher precision"
+        )
     for name, value in arrays.items():
         write_mem(directory / name, value)
     lengths = []
