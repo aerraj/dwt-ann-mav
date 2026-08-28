@@ -1,0 +1,26 @@
+name: Tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: sudo apt-get update && sudo apt-get install -y iverilog
+      - run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: python -m pip install -e '.[video,plots,dev]'
+      - run: ruff check src tests scripts
+      - run: ruff format --check src tests scripts
+      - run: python -m pytest -q
+      - run: motor-monitor demo --output runs/ci-demo --wavelet db4 --window-size 4096 --epochs 2
+      - run: motor-monitor verify-fixed runs/ci-demo/run/model.npz runs/ci-demo/data/synthetic_1_000.npy

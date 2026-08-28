@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dwt-ann-mav"
+version = "0.1.0"
+description = "Reproducible DWT/ANN motor monitoring, fixed-point FPGA reference, and learned video magnification"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26,<3", "scipy>=1.12,<2", "PyWavelets>=1.6,<2", "torch>=2.6,<3", "scikit-learn>=1.4,<2"]
+
+[project.optional-dependencies]
+video = ["opencv-python-headless>=4.9,<6"]
+plots = ["matplotlib>=3.8,<4"]
+dev = ["pytest>=8,<10", "ruff>=0.9,<1", "mpmath==1.3.0"]
+
+[project.scripts]
+motor-monitor = "dwt_ann_mav.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+dwt_ann_mav = ["resources/*.json", "resources/*.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/test_video.py" = ["E402"]
