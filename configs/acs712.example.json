@@ -1,0 +1,7 @@
+{
+  "adc_bits": 12,
+  "adc_reference_volts": 3.3,
+  "sensor_zero_volts": 2.5,
+  "sensitivity_volts_per_amp": 0.1,
+  "divider_ratio": 0.6
+}
